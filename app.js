@@ -1,4 +1,4 @@
-
+// Hello test
 $(document).ready(function(){
 
   $( document ).ajaxStart(function() {
