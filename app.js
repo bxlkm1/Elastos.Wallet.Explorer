@@ -881,6 +881,4 @@ function create_balance_chart(all_tx,layout) {
   }
  });
 
- balance_chart.canvas.parentNode.style.height = '400px';
-
 }
