@@ -1,4 +1,3 @@
-// Hello test
 $(document).ready(function(){
 
   $( document ).ajaxStart(function() {
@@ -38,6 +37,8 @@ function get_address() {
     $( "#dashboard" ).hide();
     $('#payments-table').DataTable().destroy();
     $('#transfers-table').DataTable().destroy();
+    $('#internal-tx-table').DataTable().destroy();
+    $('#all-table').DataTable().destroy();
     $( "#input-error" ).hide()
 
   var address = (doc("address").value).trim()
