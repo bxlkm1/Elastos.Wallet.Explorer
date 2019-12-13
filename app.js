@@ -661,7 +661,6 @@ function create_table(payments){
   table.columns.adjust()
 
   function format (d) {
-    // `d` is the original data object for the row
     return '<table class="details_table" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr class="details-row">'+
             '<td class="details-column" style="font-weight:600">Memo</td>'+
