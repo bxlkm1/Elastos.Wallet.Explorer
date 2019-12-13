@@ -63,14 +63,24 @@ tr:hover td {
   border-bottom: 1px solid #666666 !important;
 }
 
-td:first-child {
-}
-
 tr:first-child {
   border-top: 1px solid #666666 !important;
 }
 
-th:first-child {
+.details-column {
+  border-top: none !important;
+  padding-left: 10px !important;
+  padding-right: 7.5px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+tr.details-row:first-child {
+  border-top: none !important;
+}
+
+td.details-column:first-child {
+  padding-left: 0 !important;
 }
 
 .page-link {

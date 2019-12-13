@@ -584,7 +584,7 @@ function create_table(payments){
   $.fn.dataTable.moment('l LT');
   $($.fn.dataTable.tables(true)).DataTable().columns.adjust()
 
-  var payments_table = $('#payments-table').DataTable({
+  var table = $('#payments-table').DataTable({
       data: payments.data,
       columns: [
               { data: 'timestamp' },
@@ -602,6 +602,9 @@ function create_table(payments){
               } }
          ],
       "order": [[ 0, 'desc' ]],
+      "drawCallback": function () {
+        $('tr').addClass('primary');
+       },
        pageLength: 20,
        lengthChange: false,
        searching: false,
@@ -610,9 +613,49 @@ function create_table(payments){
        scrollX: 200
   });
 
-  payments_table.columns.adjust()
+  table.columns.adjust()
+
+  function format (d) {
+    // `d` is the original data object for the row
+    return '<table class="details_table" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">Memo</td>'+
+            '<td class="details-column">'+d.memo+'</td>'+
+        '</tr>'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">Payout Address</td>'+
+            '<td class="details-column">'+d.from+'</td>'+
+        '</tr>'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">Height</td>'+
+            '<td class="details-column">'+d.height+'</td>'+
+        '</tr>'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">Transaction ID</td>'+
+            '<td class="details-column">'+d.hash+'</td>'+
+        '</tr>'+
+    '</table>';
+  };
+
+
+  $('#payments-table tbody').on('click', 'tr.primary', function () {
+         var tr = $(this).closest('tr');
+         var row = table.row( tr );
+
+         if ( row.child.isShown() ) {
+             // This row is already open - close it
+             row.child.hide();
+             tr.removeClass('shown');
+         }
+         else {
+             // Open this row
+             row.child( format(row.data()) ).show();
+             tr.addClass('shown');
+         }
+  });
 
 };
+
 
 function create_transfers_table(transfers,layout){
 
