@@ -572,6 +572,7 @@ function create_table(payments){
 
   console.log('Payment table data')
   console.log(payments)
+  $.fn.dataTable.moment('l LT');
   $($.fn.dataTable.tables(true)).DataTable().columns.adjust()
 
   var payments_table = $('#payments-table').DataTable({
@@ -593,9 +594,6 @@ function create_table(payments){
        lengthChange: false,
        searching: false,
        "lengthMenu": [[20, 50, 100, 500, 1000], [20, 50, 100, 500, 1000]],
-        "drawCallback": function () {
-       $('.paginate_button').addClass('white');
-       },
        scroller: true,
        scrollX: 200
   });
