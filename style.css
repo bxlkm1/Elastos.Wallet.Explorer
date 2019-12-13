@@ -137,8 +137,25 @@ a {
   color: #e8007f;
 }
 
-.class {
+.social {
   color: #1898b8;
+}
+
+i:hover {
+  color: #e8007f;
+}
+
+.nodes_li {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.url_link {
+  color: #fff;
+}
+
+.url_link:hover {
+  color: #e8007f;
 }
 
 :focus {outline:0 !important;}
