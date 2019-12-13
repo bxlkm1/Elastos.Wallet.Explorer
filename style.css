@@ -65,6 +65,9 @@ tr:hover td {
 
 .dataTables_wrapper .row {
   padding: 0 !important;
+  padding-bottom: 15px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .dataTables_wrapper .col-sm-12 {
@@ -111,6 +114,7 @@ td.details-column:first-child {
 
 .dataTables_info {
   padding-top: 0 !important;
+  vertical-align: middle;
 }
 
 #input-error {
