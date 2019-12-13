@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="row">
+    <div class="box col">
+     <div class="inner">
+      <H5 class="title">Elastos Wallet Explorer</H5>
+      <div class="search-box">
+        <div class="input-field">
+          <label class="input-text" data-shrink="false" for="textField-search-field">Enter your wallet address</label>
+          <div class="input-before">
+            <input class="input" aria-invald="false" id="address" type="text" value></input>
+          </div>
+        </div>
+       <button type="button" class="search-button" onclick="get_address()">Search</button>
+      </div>
+     </div>
+    </div>
+  </div>
+</div>
+
+.search-box {
+ flex: 1 1 auto;
+ display: flex;
+ align-items: center;
+}
+
+.input-field {
+  flex: 1 1 auto;
+  display: flex;
+  margin-right: 8px;
+  flex-direction: column;
+  border: 0;
+}
+
+.input-text {
+  overflow: hidden;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: absolute;
+  top: 0
+  left: 0;
+  transform: translate(0, 6px) scale(1);
+  transform-origin: top left;
+}
+
+.input-before {
+
+}
+
+.input {
+  font: inherit;
+  color: currentColor;
+  width: 100%;
+  border: 0;
+  margin: 0;
+  padding: 6px 0 7px;
+  display: block;
+  min-width: 0;
+  box-sizing: content-box;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.input:focus {
+  outline: 0;
+}

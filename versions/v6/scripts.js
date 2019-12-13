@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
 
   $( document ).ajaxStart(function() {
@@ -36,8 +37,8 @@ function format_time(object) {
 function get_address() {
     $( "#dashboard" ).hide();
     $('#payments-table').DataTable().destroy();
-    $('#transfers-table').DataTable().destroy();
     $('#internal-tx-table').DataTable().destroy();
+    $('#transfers-table').DataTable().destroy();
     $('#all-table').DataTable().destroy();
     $( "#input-error" ).hide()
 
@@ -572,7 +573,6 @@ function create_table(payments){
 
   console.log('Payment table data')
   console.log(payments)
-  $.fn.dataTable.moment('l LT');
   $($.fn.dataTable.tables(true)).DataTable().columns.adjust()
 
   var payments_table = $('#payments-table').DataTable({
@@ -594,6 +594,9 @@ function create_table(payments){
        lengthChange: false,
        searching: false,
        "lengthMenu": [[20, 50, 100, 500, 1000], [20, 50, 100, 500, 1000]],
+        "drawCallback": function () {
+       $('.paginate_button').addClass('white');
+       },
        scroller: true,
        scrollX: 200
   });
@@ -878,5 +881,7 @@ function create_balance_chart(all_tx,layout) {
    },
   }
  });
+
+ balance_chart.canvas.parentNode.style.height = '400px';
 
 }

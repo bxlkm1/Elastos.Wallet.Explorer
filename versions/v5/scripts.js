@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
 
   $( document ).ajaxStart(function() {
@@ -20,25 +21,10 @@ $(document).ready(function(){
 
 function doc(id){return document.getElementById(id)}
 
-function format_time(object) {
-  console.log('time formatter called')
-
-   for (i=0; i < object.data.length; i++) {
-      var time_of_tx = parseInt(object.data[i].timestamp)
-      var formatted_time = moment.unix(time_of_tx).format('l LT')
-      object.data[i].timestamp = formatted_time
-  }
-  console.log(object)
-  return object
-
-}
-
 function get_address() {
     $( "#dashboard" ).hide();
     $('#payments-table').DataTable().destroy();
-    $('#transfers-table').DataTable().destroy();
-    $('#internal-tx-table').DataTable().destroy();
-    $('#all-table').DataTable().destroy();
+    $('#misc-table').DataTable().destroy();
     $( "#input-error" ).hide()
 
   var address = (doc("address").value).trim()
@@ -67,7 +53,6 @@ function get_address() {
     }})).then(function(data,pay_object){
 
     if (data[0].result === null) {
-        doc("loading_message").innerHTML = "Analyzing transactions..."
 
       $.when(
 
@@ -153,9 +138,9 @@ function scan_vote_history(data,address,pay_object) {
   } else if (votes_num < 36) {
     var short = 36 - votes_num
     if (canceled.length > 0) {
-    doc("votes_message").innerHTML = '<span style="color:#e8007f;">Warning! This wallet may vote for ' + short + ' more supernode(s). ' + offline + ' selections inactive or canceled.</span>'
+    doc("votes_message").innerHTML = '<span style="color:#e8007f;">Warning! This wallet may vote for ' + short + ' more supernode(s). ' + offline + ' selections inactive.</span>'
     } else if (inactives.length > 0) {
-    doc("votes_message").innerHTML = '<span style="color:#e6b800;">Warning! This wallet may vote for ' + short + ' more supernode(s). ' + offline + ' selections inactive or canceled.</span>'
+    doc("votes_message").innerHTML = '<span style="color:#e6b800;">Warning! This wallet may vote for ' + short + ' more supernode(s). ' + offline + ' selections inactive.</span>'
     } else {
         doc("votes_message").innerHTML = '<span style="color:#e6b800;">Warning! This wallet may vote for ' + short + ' more supernode(s). All selections active.</span>'
     }
@@ -227,14 +212,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
   var all_tx = {
     data: []
   }
-  var transfers = {
-    data: []
-  }
-  var internal_tx = {
-    data: []
-  }
   var layout = ''
-  var entry = {}
 
   if (typeof block_time !== "undefined") {
    voting_address(data,address,address_balance,pay_object,value,block_time)
@@ -249,13 +227,14 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
   var payments = {
     data: []
   }
+  var misc = {
+    data: []
+  }
   var votes = []
 
   layout = 'voter'
 
   for (i = data.result.History.length - 1; i > -1; i--) {
-
-    entry = {}
 
     var transaction = data.result.History[i]
 
@@ -276,11 +255,13 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
       var match1 = _.find(pay_object.result, function(payment){ return payment.Payout_wallet[1] == send_address});
       var match2 = _.find(pay_object.result, function(payment){ return payment.Payout_wallet[2] == send_address});
 
+    var entry = {}
+
     if (match0 !== undefined) {
 
       entry.from_name = match0.Nickname
       entry.type = transaction.Type
-      entry.timestamp = transaction.CreateTime
+      entry.time = transaction.CreateTime
       entry.fee = transaction.Fee
       entry.height = transaction.Height
       entry.from = transaction.Inputs
@@ -296,7 +277,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
       entry.from_name = match1.Nickname
       entry.type = transaction.Type
-      entry.timestamp = transaction.CreateTime
+      entry.time = transaction.CreateTime
       entry.fee = transaction.Fee
       entry.height = transaction.Height
       entry.from = transaction.Inputs
@@ -312,7 +293,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
       entry.from_name = match2.Nickname
       entry.type = transaction.Type
-      entry.timestamp = transaction.CreateTime
+      entry.time = transaction.CreateTime
       entry.fee = transaction.Fee
       entry.height = transaction.Height
       entry.from = transaction.Inputs
@@ -324,7 +305,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
       payments.data.push(entry)
 
-    } else { // transfers transaction table
+    } else { // Misc transaction table
 
     //  console.log(transaction)
 
@@ -346,7 +327,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
       }*/
 
 
-      /*if (transaction.Type === "spend" && transaction.TxType === "vote") {
+      if (transaction.Type === "spend" && transaction.TxType === "vote") {
         entry.type = 'Vote' // Consolidate?
         //console.log('multiinput')
         //console.log(transaction)
@@ -358,60 +339,26 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
         //console.log('else')
         //console.log(transaction)
         entry.type = transaction.Type
-      }*/
-
-      if (transaction.Inputs.length == transaction.Outputs.length && JSON.stringify(transaction.Inputs) === JSON.stringify(transaction.Outputs)) {
-
-        entry.tx_type = "Vote or Consolidate"
-        entry.type = transaction.Type
-        entry.timestamp = transaction.CreateTime
-        entry.fee = transaction.Fee
-        entry.height = transaction.Height
-        entry.from = transaction.Inputs
-        entry.to = transaction.Outputs
-        entry.hash = transaction.Txid
-        entry.value = transaction.Value/100000000
-        entry.memo = transaction.Memo.slice(14)
-
-        internal_tx.data.push(entry)
-
-
-      } else if (transaction.Inputs[0] === transaction.Outputs[0] && transaction.Outputs.includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
-
-        entry.tx_type = "Vote or Consolidate"
-        entry.type = transaction.Type
-        entry.timestamp = transaction.CreateTime
-        entry.fee = transaction.Fee
-        entry.height = transaction.Height
-        entry.from = transaction.Inputs
-        entry.to = transaction.Outputs
-        entry.hash = transaction.Txid
-        entry.value = transaction.Value/100000000
-        entry.memo = transaction.Memo.slice(14)
-
-        internal_tx.data.push(entry)
-
-      } else {
-
-        entry.tx_type = "Vote or Consolidate"
-        entry.type = transaction.Type
-        entry.timestamp = transaction.CreateTime
-        entry.fee = transaction.Fee
-        entry.height = transaction.Height
-        entry.from = transaction.Inputs
-        entry.to = transaction.Outputs
-        entry.hash = transaction.Txid
-        entry.value = transaction.Value/100000000
-        entry.memo = transaction.Memo.slice(14)
-
-        transfers.data.push(entry)
-
       }
+
+      entry.time = transaction.CreateTime
+      entry.fee = transaction.Fee
+      entry.height = transaction.Height
+      entry.from = transaction.Inputs
+      entry.to = transaction.Outputs
+      entry.tx_type = transaction.TxType
+      entry.hash = transaction.Txid
+      entry.value = transaction.Value/100000000
+      entry.memo = transaction.Memo.slice(14)
+
+      //console.log(entry.memo)
+
+      misc.data.push(entry)
     }
-    all_tx.data.push(entry)
+  all_tx.data.push(entry)
   }
   populate_wallet_summary(data,address,address_balance,income_count,spend_count);
-  parse_payments(payments,value,block_time)
+  parse_payments(payments,misc,value,block_time)
  }
 
  function non_voting_address() {
@@ -423,7 +370,6 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
    for (i = data.result.History.length - 1; i > -1; i--) {
 
-    entry = {}
     var transaction = data.result.History[i]
 
     if (transaction.Type === "income") {
@@ -435,74 +381,38 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
     }
 
     var send_address = transaction.Inputs
+    var entry = {}
 
-    if (transaction.Inputs.length == transaction.Outputs.length && JSON.stringify(transaction.Inputs) === JSON.stringify(transaction.Outputs) || transaction.Inputs[0] === transaction.Outputs[0] && (JSON.stringify(transaction.Outputs)).includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
-      entry.tx_type = "Vote/Consolidate"
-      entry.type = transaction.Type
-      entry.timestamp = transaction.CreateTime
-      entry.fee = transaction.Fee
-      entry.height = transaction.Height
-      entry.from = transaction.Inputs
-      entry.to = transaction.Outputs
-      entry.hash = transaction.Txid
-      entry.value = transaction.Value/100000000
-      entry.memo = transaction.Memo.slice(14)
+    entry.time = transaction.CreateTime
+    entry.fee = transaction.Fee
+    entry.height = transaction.Height
+    entry.from = transaction.Inputs
+    entry.to = transaction.Outputs
+    entry.type = transaction.Type
+    entry.tx_type = transaction.TxType
+    entry.hash = transaction.Txid
+    entry.value = transaction.Value/100000000
+    entry.memo = transaction.Memo.slice(14)
 
-      internal_tx.data.push(entry)
-
-    } else {
-      entry.tx_type = "Vote/Consolidate"
-      entry.type = transaction.Type
-      entry.timestamp = transaction.CreateTime
-      entry.fee = transaction.Fee
-      entry.height = transaction.Height
-      entry.from = transaction.Inputs
-      entry.to = transaction.Outputs
-      entry.tx_type = transaction.TxType
-      entry.hash = transaction.Txid
-      entry.value = transaction.Value/100000000
-      entry.memo = transaction.Memo.slice(14)
-
-      transfers.data.push(entry)
-    }
     all_tx.data.push(entry)
+
  }
+  console.log(all_tx)
   populate_wallet_summary(data,address,address_balance,income_count,spend_count);
-  //create_transfers_table(transfers,layout)
+  create_misc_table(all_tx,layout)
 }
-
-  create_transfers_table(transfers,layout)
-  if (internal_tx.data.length > 0) {
-  create_internal_tx_table(internal_tx)
-  } else {
-    $('#nav6').hide()
-  }
-  $("#loader").hide();
-  $('#dashboard').show();
-
-  if (layout == "non-voter") {
-  $('#voting_status').hide();
-  $('#supernode_selections').hide();
-  $('#voting_rewards_overview').hide()
-  $('#nav3').hide()
-  $('#nav4').hide()
-  }
-
   create_balance_chart(all_tx,layout)
-  all_tx_table(all_tx)
-
 }
 
 function populate_wallet_summary(data,address,address_balance,income_count,spend_count) {
-var data1 = data
 doc("wallet_address").innerHTML = address
 doc("balance").innerHTML = parseFloat(address_balance.result).toLocaleString(undefined, {maximumFractionDigits:2}) + ' ELA'
-var first_tx = moment.unix(data1.result.History[0].CreateTime).format('LLL')
+var first_tx = moment.unix(data.result.History[0].CreateTime).format('LLL')
 doc("created").innerHTML = first_tx
 doc("tx_count").innerHTML = data.result.History.length + ' (' + '<i class="fa fa-arrow-down text-success"></i>' + income_count + ' ' + '<i class="fa fa-arrow-up text-danger"></i>' + spend_count + ')'
 }
 
-function parse_payments(data,value,block_time) {
+function parse_payments(data,data_misc,value,block_time) {
 
   var all_time = 0
   var recent_vote = 0
@@ -513,7 +423,7 @@ function parse_payments(data,value,block_time) {
   Time_week = 604800
   Time_month = 2628000
 
-  time_first_payment = data.data[data.data.length-1].timestamp
+  time_first_payment = data.data[data.data.length-1].time
 
   Timestamp_all = Time_Now - time_first_payment
   Timestamp_recent_vote = block_time
@@ -524,15 +434,15 @@ function parse_payments(data,value,block_time) {
 
       all_time += data.data[i].value
 
-    if (data.data[i].timestamp > Timestamp_month) {
+    if (data.data[i].time > Timestamp_month) {
       month += data.data[i].value
     }
 
-    if (data.data[i].timestamp > Timestamp_week) {
+    if (data.data[i].time > Timestamp_week) {
       week += data.data[i].value
     }
 
-    if (data.data[i].timestamp > Timestamp_recent_vote) {
+    if (data.data[i].time > Timestamp_recent_vote) {
       recent_vote += data.data[i].value
     }
   }
@@ -560,25 +470,34 @@ function parse_payments(data,value,block_time) {
   weekARR = parseFloat((week*52)/balance*100)
   doc("7dARR").innerHTML = weekARR.toFixed(2) + '% ARR'
 
+  for (i=0; i < data.data.length; i++) {
+    var time_of_tx = parseInt(data.data[i].time)
+    var formatted_time = moment.unix(time_of_tx).format('l LT')
+    data.data[i].time = formatted_time
+  }
+
   var layout = 'voter'
   create_table(data)
+  create_misc_table(data_misc,layout)
   dpos_earnings_chart(data)
+  $("#loader").hide();
+  $('#dashboard').show();
 
 }
 
-function create_table(payments){
+function create_table(data){
 
-  format_time(payments)
-
+  var payments = data
   console.log('Payment table data')
   console.log(payments)
+
   $.fn.dataTable.moment('l LT');
   $($.fn.dataTable.tables(true)).DataTable().columns.adjust()
 
   var payments_table = $('#payments-table').DataTable({
       data: payments.data,
       columns: [
-              { data: 'timestamp' },
+              { data: 'time' },
               { data: 'from_name' },
               { data: 'value', "render": $.fn.dataTable.render.number( ',', '.', 5)},
               { data: 'hash',
@@ -594,6 +513,9 @@ function create_table(payments){
        lengthChange: false,
        searching: false,
        "lengthMenu": [[20, 50, 100, 500, 1000], [20, 50, 100, 500, 1000]],
+        "drawCallback": function () {
+       $('.paginate_button').addClass('white');
+       },
        scroller: true,
        scrollX: 200
   });
@@ -602,22 +524,39 @@ function create_table(payments){
 
 };
 
-function create_transfers_table(transfers,layout){
+function create_misc_table(data_misc,layout){
 
-  format_time(transfers)
+  for (i=0; i < data_misc.data.length; i++) {
+    var time_of_tx = parseInt(data_misc.data[i].time)
+    var formatted_time = moment.unix(time_of_tx).format('l LT')
+    data_misc.data[i].time = formatted_time
+  }
 
-  console.log('transfers transaction table data')
-  console.log(transfers)
+  $("#loader").hide();
+  $('#dashboard').show();
+
+  if (layout == "non-voter") {
+  $('#voting_status').hide();
+  $('#supernode_selections').hide();
+  $('#voting_rewards_overview').hide()
+  $('#nav2').hide()
+  $('#nav3').hide()
+  $('#nav4').hide()
+  }
+
+  var payments = data_misc
+  console.log('Misc transaction table data')
+  console.log(payments)
 
   $.fn.dataTable.moment('l LT');
 
-    $('#transfers-table').DataTable({
-      data: transfers.data,
+    $('#misc-table').DataTable({
+      data: payments.data,
       columns: [
-              { data: 'timestamp' },
+              { data: 'time' },
               { data: 'type' },
               { data: 'value', "render": $.fn.dataTable.render.number( ',', '.', 5)},
-              { data: 'memo' }
+              { data: 'hash' }
          ],
        "columnDefs": [{
        "targets": 1,
@@ -643,82 +582,7 @@ function create_transfers_table(transfers,layout){
   });
 };
 
-function create_internal_tx_table(internal_tx){
-
-  format_time(internal_tx)
-
-  console.log('internal transaction table data')
-  console.log(internal_tx)
-
-  $.fn.dataTable.moment('l LT');
-
-    $('#internal-tx-table').DataTable({
-      data: internal_tx.data,
-      columns: [
-              { data: 'timestamp' },
-              { data: 'tx_type' },
-              { data: 'value', "render": $.fn.dataTable.render.number( ',', '.', 5)},
-              { data: 'memo' }
-         ],
-       "columnDefs": [{
-       "targets": 1,
-       "createdCell": function (td, cellData, rowData, row, col) {
-         if (cellData == "spend") {
-           $(td).html('<a style="color:#e8007f;">Send</a>');
-         }
-         if (cellData == "income") {
-           $(td).html('<a style="color:#00cc88;">Receive</a>');
-         }
-       },
-      },
-      ],
-      "order": [[ 0, 'desc' ]],
-       pageLength: 20,
-       lengthChange: false,
-       searching: false,
-        "drawCallback": function () {
-       $('.paginate_button').addClass('white');
-       },
-       scroller: true,
-       scrollX: 200
-  });
-};
-
-function all_tx_table(all){
-
-  $.fn.dataTable.moment('l LT');
-
-  var payments_table = $('#all-table').DataTable({
-      data: all.data,
-      columns: [
-              { data: 'timestamp' },
-              { data: 'tx_type' },
-              { data: 'value', "render": $.fn.dataTable.render.number( ',', '.', 5)},
-              { data: 'hash',
-              "render": function ( data, type, row, meta ) {
-                if (data.length > 10) {
-                  trunc = data.substr(0,12) + '...' + data.substr(54,12)
-                  return '<a style="color:#ffffff;" href="https://blockchain.elastos.org/tx/'+data+'" target="_blank">'+trunc+'</a>';
-                }
-              } }
-         ],
-      "order": [[ 0, 'desc' ]],
-       pageLength: 20,
-       lengthChange: false,
-       searching: false,
-       "lengthMenu": [[20, 50, 100, 500, 1000], [20, 50, 100, 500, 1000]],
-        "drawCallback": function () {
-       $('.paginate_button').addClass('white');
-       },
-       scroller: true,
-       scrollX: 200
-  });
-
-  payments_table.columns.adjust()
-
-};
-
-function dpos_earnings_chart(payments) {
+function dpos_earnings_chart(json) {
 
   var width = window.innerWidth || document.chart1.clientWidth;
   //console.log(width)
@@ -731,13 +595,13 @@ function dpos_earnings_chart(payments) {
   gradient.addColorStop(1,"rgb(255, 0, 102, 0.4)") // FF9100 rgb(255, 145, 0)
 
 
-  var labels = payments.data.map(function(e) {
-    return e.timestamp //.slice(0, -10)
+  var labels = json.data.map(function(e) {
+    return e.time //.slice(0, -10)
   });
 
   labels = labels.reverse()
 
-  var data = payments.data.map(function(e) {
+  var data = json.data.map(function(e) {
     return e.value
   });
 
@@ -791,13 +655,10 @@ new Chart(ctx, {
  });
 }
 
-function create_balance_chart(all_tx,layout) {
-
-  console.log('balance chart')
-  console.log(all_tx)
+function create_balance_chart(json) {
 
   var width = window.innerWidth || document.chart2.clientWidth;
-  console.log(width)
+  //console.log(width)
   var ctx = document.getElementById("chart2").getContext('2d')
   var gradient = ctx.createLinearGradient(0,0,width,0);
 
@@ -807,13 +668,13 @@ function create_balance_chart(all_tx,layout) {
   gradient.addColorStop(1,"rgb(255, 0, 102, 0.4)") // FF9100 rgb(255, 145, 0)
 
 
-  var labels = all_tx.data.map(function(e) {
-    return e.timestamp
+  var labels = json.data.map(function(e) {
+    return e.time
   });
-  var data = all_tx.data.map(function(e) {
+  var data = json.data.map(function(e) {
     return e.value
   });
-  var type = all_tx.data.map(function(e) {
+  var type = json.data.map(function(e) {
     return e.type
   });
 
@@ -821,19 +682,22 @@ function create_balance_chart(all_tx,layout) {
   data = data.reverse()
   type = type.reverse()
 
+
   var starting_balance = data[0]
   for (i=1; i < data.length; i++) {
-
     if (type[i] == "income") {
       starting_balance += data[i]
+      data[i] = starting_balance.toFixed(6)
+    } else if (type[i] == "Vote") {
+      starting_balance -= data[i]
       data[i] = starting_balance.toFixed(6)
     } else if (type[i] == "spend") {
       starting_balance -= data[i]
       data[i] = starting_balance.toFixed(6)
     }
   }
-
-  var balance_chart = new Chart(ctx, {
+  
+new Chart(ctx, {
   type: 'line',
   data: {
     labels: labels,
@@ -854,7 +718,6 @@ function create_balance_chart(all_tx,layout) {
     ]
   },
   options: {
-  maintainAspectRatio: false,
    series: {
      step: 'left'
    },
@@ -878,5 +741,4 @@ function create_balance_chart(all_tx,layout) {
    },
   }
  });
-
 }

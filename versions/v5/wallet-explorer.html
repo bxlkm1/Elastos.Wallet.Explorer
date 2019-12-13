@@ -2,28 +2,41 @@
 
 <html lang="en">
 <head>
-    <title>Elastos Wallet Explorer</title>
+    <title>ELAnodes Wallet Explorer</title>
     <!-- for-mobile-apps -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 
+    <!--<script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    }
+
+    var ua = navigator.userAgent;
+    if (ua.indexOf("Android") > 0 || ua.indexOf("iPhone") > 0 || ua.indexOf("iPad") > 0) {
+        window.location.replace("dashboardmobile.html");
+    }
+  </script>-->
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"/>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
-    <script src="app.js"></script>
+    <script src="scripts.js"></script>
 
 
 </head>
@@ -148,33 +161,29 @@
         <br>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-          <li id="nav5" class="nav-item">
-            <a class="nav-link active" data-toggle="tab" role="tab" aria-controls="menu5" href="#menu5">Balance</a>
-          </li>
           <li id="nav1" class="nav-item">
-                <a class="nav-link" data-toggle="tab" role="tab" aria-controls="home" href="#home">Transfers</a>
-          </li>
-          <li id="nav3" class="nav-item">
-            <a class="nav-link" data-toggle="tab" role="tab" aria-controls="menu3" href="#menu3">DPoS Payouts</a>
-          </li>
-          <li id="nav4" class="nav-item">
-            <a class="nav-link" data-toggle="tab" role="tab" aria-controls="menu4" href="#menu4">DPoS History</a>
-          </li>
-          <li id="nav6" class="nav-item">
-            <a class="nav-link" data-toggle="tab" role="tab" aria-controls="menu6" href="#menu6">Internal Transactions</a>
+            <a class="nav-link active" data-toggle="tab" role="tab" aria-controls="home" href="#home">Transfers</a>
           </li>
           <li id="nav2" class="nav-item">
-              <a class="nav-link" data-toggle="tab" role="tab" aria-controls="menu1" href="#menu1">All</a>
+            <a class="nav-link" data-toggle="tab" role="tab" aria-controls="menu1" href="#menu1">All</a>
           </li>
-
+          <li id="nav3" class="nav-item">
+            <a class="nav-link" data-toggle="tab" role="tab" aria-controls="menu3" href="#menu3">DPoS Payments Records</a>
+          </li>
+          <li id="nav4" class="nav-item">
+            <a class="nav-link" data-toggle="tab" role="tab" aria-controls="menu4" href="#menu4">DPoS Payments Chart</a>
+          </li>
+          <li id="nav4" class="nav-item">
+            <a class="nav-link" data-toggle="tab" role="tab" aria-controls="menu5" href="#menu5">Balance</a>
+          </li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
 
-          <div id="home" class="container tab-pane fade" role="tabpanel"><br>
+          <div id="home" class="container tab-pane active" role="tabpanel"><br>
             <div class="payments container">
-                   <table id="transfers-table" class="table compact responsive nowrap text-xs-left" style="width:100%">
+                   <table id="misc-table" class="table compact responsive nowrap text-xs-left" style="width:100%">
                       <thead>
                         <tr>
                            <th class="payments-header">Date</th>
@@ -187,18 +196,6 @@
             </div>
           </div>
           <div id="menu1" class="container tab-pane fade"><br>
-            <div class="payments container">
-                   <table id="all-table" class="table compact responsive nowrap text-xs-left" style="width:100%">
-                      <thead>
-                        <tr>
-                           <th class="payments-header">Date</th>
-                            <th class="payments-header">Type</th>
-                           <th class="payments-header">Amount</th>
-                           <th class="payments-header">Hash</th>
-                         </tr>
-                        </thead>
-                    </table>
-            </div>
           </div>
           <div id="menu3" class="container tab-pane fade" role="tabpanel"><br>
             <div class="payments container">
@@ -219,23 +216,9 @@
                   <canvas id="chart1"></canvas>
             </div>
           </div>
-          <div id="menu5" class="container tab-pane active"><br>
+          <div id="menu5" class="container tab-pane fade"><br>
             <div id="chart2_box">
-                  <canvas id="chart2" style="min-height: 400px;"></canvas>
-            </div>
-          </div>
-          <div id="menu6" class="container tab-pane fade" role="tabpanel"><br>
-            <div class="payments container">
-                   <table id="internal-tx-table" class="table compact responsive nowrap text-xs-left" style="width:100%">
-                      <thead>
-                        <tr>
-                           <th class="payments-header">Date</th>
-                            <th class="payments-header">Type</th>
-                            <th class="payments-header">Fee</th>
-                            <th class="payments-header">Memo</th>
-                         </tr>
-                        </thead>
-                    </table>
+                  <canvas id="chart2"></canvas>
             </div>
           </div>
         </div>
