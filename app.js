@@ -174,16 +174,30 @@ function scan_vote_history(data,address,pay_object) {
   supernode_list.appendChild(ul)
   supernode_list.classList.add("supernode-list")
 
+  function socials_match(node) {
+      var html = ""
+      if (socials.hasOwnProperty(node)) {
+      for (x in socials[node]) {
+        html += socials[node][x] + " ";
+      }
+      return html
+      } else {
+      return
+      }
+  }
+
   node_names.forEach(function (node) {
     let li = document.createElement('li');
     ul.appendChild(li);
-    li.innerHTML += node;
+    var social_links = socials_match(node)
+    li.innerHTML += node + '&nbsp' + social_links;
   });
 
   inactives.forEach(function (node) {
     let li = document.createElement('li');
     ul.appendChild(li);
-    li.innerHTML += node + ' -- Alert: Node currently inactive';
+    var social_links = socials_match(node)
+    li.innerHTML += node + '&nbsp' + social_links + ' -- Alert: Node currently inactive';
     li.style.color = "#e6b800";
   });
 

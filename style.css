@@ -137,6 +137,10 @@ a {
   color: #e8007f;
 }
 
+.class {
+  color: #1898b8;
+}
+
 :focus {outline:0 !important;}
 
 input[type=text] {
