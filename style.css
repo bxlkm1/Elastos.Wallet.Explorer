@@ -37,12 +37,18 @@ table.dataTable {
   border-collapse: separate;
 }
 
+.logo {
+  max-width: 3.25em;
+  padding-right: 1em;
+}
+
 tr:hover td {
   background-color: #4d4d4d;
 }
 
 .table td {
   border-top: 1px solid #666666;
+  vertical-align: middle;
 }
 
 .table th {
@@ -132,6 +138,11 @@ input[type=text] {
 
 input[type=text]:focus {
   border: 3px solid #248f8f;
+}
+
+a[type=button]:focus {
+  border: none !important;
+  outline: none !important;
 }
 
 .search-buttom {

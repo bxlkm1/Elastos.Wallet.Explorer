@@ -560,6 +560,15 @@ function parse_payments(data,value,block_time) {
   weekARR = parseFloat((week*52)/balance*100)
   doc("7dARR").innerHTML = weekARR.toFixed(2) + '% ARR'
 
+
+  for (i=0; i < data.data.length; i++) {
+  if (logos.hasOwnProperty(data.data[i].from_name)) {
+    data.data[i].from_name = logos[data.data[i].from_name] + data.data[i].from_name
+  } else {
+    data.data[i].from_name = '<img src="images/logos/Dummy.png" class="logo">' + data.data[i].from_name
+  }
+  }
+
   var layout = 'voter'
   create_table(data)
   dpos_earnings_chart(data)
@@ -580,12 +589,15 @@ function create_table(payments){
       columns: [
               { data: 'timestamp' },
               { data: 'from_name' },
-              { data: 'value', "render": $.fn.dataTable.render.number( ',', '.', 5)},
+              { data: 'value',
+              "render": function ( data, type, row, meta ) {
+                  return '<a style="color:#00cc88">' +'+' +data.toFixed(6)+'</a>'
+              }},
               { data: 'hash',
               "render": function ( data, type, row, meta ) {
                 if (data.length > 10) {
-                  trunc = data.substr(0,12) + '...' + data.substr(54,12)
-                  return '<a style="color:#ffffff;" href="https://blockchain.elastos.org/tx/'+data+'" target="_blank">'+trunc+'</a>';
+                  trunc = data.substr(0,6) + '... ' + data.substr(58,6)
+                  return '<a style="color:#1898b8;" href="https://blockchain.elastos.org/tx/'+data+'" target="_blank">'+trunc+'</a>';
                 }
               } }
          ],
@@ -797,7 +809,6 @@ function create_balance_chart(all_tx,layout) {
   console.log(all_tx)
 
   var width = window.innerWidth || document.chart2.clientWidth;
-  console.log(width)
   var ctx = document.getElementById("chart2").getContext('2d')
   var gradient = ctx.createLinearGradient(0,0,width,0);
 
