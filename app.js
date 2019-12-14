@@ -515,7 +515,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
           var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
           entry.account = 'from CoinBase - ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
 
-          entry.category = '<a  style="color:#666666">CoinBase</a>'
+          entry.category = '<a  style="color:#cccc00">Mint</a>'
 
         }
 
@@ -644,7 +644,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
         var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
         entry.account = 'from CoinBase - ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
 
-        entry.category = '<a  style="color:#666666">CoinBase</a>'
+        entry.category = '<a  style="color:#cccc00">Mint</a>'
       }
 
       '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toFixed(6) +'</a>'
