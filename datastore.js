@@ -18,6 +18,7 @@ var logos = {
 		'ELAFISH' : '<img src="images/logos/ELAFISH_1.png" class="logo">',
 		'elaHorse @ 亦乐马' : '<img src="images/logos/ELAHORSE1.png" class="logo">',
 		'ELAONSEN 亦来温泉' : '<img src="images/logos/elaonsen1.png" class="logo">',
+		'ELAlliance Pool' : '<img src="images/logos/ELAlliance.png" class="logo">',
 		'Elastos Australia' : '<img src="images/logos/Elastos Australia1.png" class="logo">',
 		'Elastos Carrier' : '<img src="images/logos/Carrier.png" class="logo">',
 		'Elastos HIVE' : '<img src="images/logos/Hive.png" class="logo">',

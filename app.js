@@ -332,6 +332,15 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
       entry.hash = transaction.Txid
       entry.value = transaction.Value/100000000
       entry.memo = transaction.Memo.slice(14)
+      entry.category = '<a  style="color:#00cc88">Rewards</a>'
+      entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
+
+
+      if (logos.hasOwnProperty(entry.from_name)) {
+          entry.account = logos[entry.from_name] + entry.from_name
+      } else {
+          entry.account = '<img src="images/logos/Dummy.png" class="logo">' + entry.from_name
+      }
 
       payments.data.push(entry)
 
@@ -348,6 +357,15 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
       entry.hash = transaction.Txid
       entry.value = transaction.Value/100000000
       entry.memo = transaction.Memo.slice(14)
+      entry.category = '<a  style="color:#00cc88">Rewards</a>'
+      entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
+
+
+      if (logos.hasOwnProperty(entry.from_name)) {
+          entry.account = logos[entry.from_name] + entry.from_name
+      } else {
+          entry.account = '<img src="images/logos/Dummy.png" class="logo">' + entry.from_name
+      }
 
       payments.data.push(entry)
 
@@ -364,6 +382,16 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
       entry.hash = transaction.Txid
       entry.value = transaction.Value/100000000
       entry.memo = transaction.Memo.slice(14)
+      entry.category = '<a  style="color:#00cc88">Rewards</a>'
+      entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
+
+
+
+      if (logos.hasOwnProperty(entry.from_name)) {
+          entry.account = logos[entry.from_name] + entry.from_name
+      } else {
+          entry.account = '<img src="images/logos/Dummy.png" class="logo">' + entry.from_name
+      }
 
       payments.data.push(entry)
 
@@ -403,7 +431,49 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
         entry.type = transaction.Type
       }*/
 
-      if (transaction.Inputs.length == transaction.Outputs.length && JSON.stringify(transaction.Inputs) === JSON.stringify(transaction.Outputs)) {
+      if (transaction.Inputs.length == transaction.Outputs.length && JSON.stringify(transaction.Inputs) === JSON.stringify(transaction.Outputs) || transaction.Inputs[0] === transaction.Outputs[0] || transaction.Outputs.includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
+
+        if (transaction.Type == "income") {
+
+          var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
+          entry.account = 'from ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+
+          entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>' + '<br>' + '<a  style="color:#666666; font-size:0.8em">fee ' + ((transaction.Fee)/100000000).toLocaleString(undefined, {maximumFractionDigits:8}) + '</a>'
+
+        } else if (transaction.Type == "spend") {
+
+          var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
+          entry.account = 'to ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Outputs[0]+'" target="_blank">'+transaction.Outputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+
+          entry.amount =  '<a style="color:#e8007f">' + '-' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>' + '<br>' + '<a  style="color:#666666; font-size:0.8em">fee '+ ((transaction.Fee)/100000000).toLocaleString(undefined, {maximumFractionDigits:8}) + '</a>'
+
+        }
+
+        if (transaction.TxType == "vote") {
+          entry.contract = '<a  style="color:#cc99ff">Vote (DPoS)</a>'
+          entry.category = '<a  style="color:#cc99ff">Vote (DPoS)</a>'
+        } else if (transaction.TxType == "transferAsset") {
+          entry.contract = '<a  style="color:#e6b800">UTXO Consolidate</a>'
+          entry.category = '<a  style="color:#e6b800">UTXO Consolidate</a>'
+        }
+
+        entry.tx_type = transaction.TxType
+        entry.type = transaction.Type
+        entry.timestamp = transaction.CreateTime
+        entry.fee = transaction.Fee
+        entry.height = transaction.Height
+        entry.from = transaction.Inputs
+        entry.to = transaction.Outputs
+        entry.hash = transaction.Txid
+        entry.value = transaction.Value/100000000
+        entry.memo = transaction.Memo.slice(14)
+
+
+
+        internal_tx.data.push(entry)
+
+
+      } /*else if (transaction.Inputs[0] === transaction.Outputs[0] || transaction.Outputs.includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
 
         entry.tx_type = transaction.TxType
         entry.type = transaction.Type
@@ -418,23 +488,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
         internal_tx.data.push(entry)
 
-
-      } else if (transaction.Inputs[0] === transaction.Outputs[0] && transaction.Outputs.includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
-
-        entry.tx_type = transaction.TxType
-        entry.type = transaction.Type
-        entry.timestamp = transaction.CreateTime
-        entry.fee = transaction.Fee
-        entry.height = transaction.Height
-        entry.from = transaction.Inputs
-        entry.to = transaction.Outputs
-        entry.hash = transaction.Txid
-        entry.value = transaction.Value/100000000
-        entry.memo = transaction.Memo.slice(14)
-
-        internal_tx.data.push(entry)
-
-      } else {
+      } */else {
 
         if (transaction.Type == "income") {
 
@@ -443,6 +497,8 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
           entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
 
+          entry.category = '<a  style="color:#1898b8">Receive</a>'
+
         } else if (transaction.Type == "spend") {
 
           var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
@@ -450,12 +506,17 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
           entry.amount =  '<a style="color:#e8007f">' + '-' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
 
+          entry.category = '<a  style="color:#e8007f">Send</a>'
+
         }
 
         if (transaction.TxType == "CoinBase") {
 
           var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
           entry.account = 'from CoinBase - ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+
+          entry.category = '<a  style="color:#666666">CoinBase</a>'
+
         }
 
         entry.tx_type = transaction.TxType
@@ -501,7 +562,31 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
     var send_address = transaction.Inputs
 
-    if (transaction.Inputs.length == transaction.Outputs.length && JSON.stringify(transaction.Inputs) === JSON.stringify(transaction.Outputs) || transaction.Inputs[0] === transaction.Outputs[0] && (JSON.stringify(transaction.Outputs)).includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
+    if (transaction.Inputs.length == transaction.Outputs.length && JSON.stringify(transaction.Inputs) === JSON.stringify(transaction.Outputs) || transaction.Inputs[0] === transaction.Outputs[0] || transaction.Outputs.includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
+
+      if (transaction.Type == "income") {
+
+        var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
+        entry.account = 'from ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+
+        entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>' + '<br>' + '<a  style="color:#666666; font-size:0.8em">fee ' + ((transaction.Fee)/100000000).toLocaleString(undefined, {maximumFractionDigits:8}) + '</a>'
+
+      } else if (transaction.Type == "spend") {
+
+        var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
+        entry.account = 'to ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Outputs[0]+'" target="_blank">'+transaction.Outputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+
+        entry.amount =  '<a style="color:#e8007f">' + '-' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>' + '<br>' + '<a  style="color:#666666; font-size:0.8em">fee '+ ((transaction.Fee)/100000000).toLocaleString(undefined, {maximumFractionDigits:8}) + '</a>'
+
+      }
+
+      if (transaction.TxType == "vote") {
+        entry.contract = '<a  style="color:#cc99ff">Vote (DPoS)</a>'
+        entry.category = '<a  style="color:#cc99ff">Vote (DPoS)</a>'
+      } else if (transaction.TxType == "transferAsset") {
+        entry.contract = '<a  style="color:#e6b800">UTXO Consolidate</a>'
+        entry.category = '<a  style="color:#e6b800">UTXO Consolidate</a>'
+      }
 
       entry.tx_type = transaction.TxType
       entry.type = transaction.Type
@@ -516,6 +601,21 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
       internal_tx.data.push(entry)
 
+    /*if (transaction.Inputs.length == transaction.Outputs.length && JSON.stringify(transaction.Inputs) === JSON.stringify(transaction.Outputs) || transaction.Inputs[0] === transaction.Outputs[0] && (JSON.stringify(transaction.Outputs)).includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
+
+      entry.tx_type = transaction.TxType
+      entry.type = transaction.Type
+      entry.timestamp = transaction.CreateTime
+      entry.fee = transaction.Fee
+      entry.height = transaction.Height
+      entry.from = transaction.Inputs
+      entry.to = transaction.Outputs
+      entry.hash = transaction.Txid
+      entry.value = transaction.Value/100000000
+      entry.memo = transaction.Memo.slice(14)
+
+      internal_tx.data.push(entry)*/
+
 
     } else {
 
@@ -526,6 +626,8 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
         entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
 
+        entry.category = '<a  style="color:#00cc88">Receive</a>'
+
       } else if (transaction.Type == "spend") {
 
         var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
@@ -533,12 +635,16 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
         entry.amount =  '<a style="color:#e8007f">' + '-' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
 
+        entry.category = '<a  style="color:#e8007f">Send</a>'
+
       }
 
       if (transaction.TxType == "CoinBase") {
 
         var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
         entry.account = 'from CoinBase - ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+
+        entry.category = '<a  style="color:#666666">CoinBase</a>'
       }
 
       '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toFixed(6) +'</a>'
@@ -680,10 +786,7 @@ function create_table(payments){
       columns: [
               { data: 'timestamp' },
               { data: 'from_name' },
-              { data: 'value',
-              "render": function ( data, type, row, meta ) {
-                  return '<a style="color:#00cc88">' + '+' + data.toFixed(6)+'</a>'
-              }},
+              { data: 'amount', },
               { data: 'hash',
               "render": function ( data, type, row, meta ) {
                 if (data.length > 10) {
@@ -858,9 +961,9 @@ function create_internal_tx_table(internal_tx){
       data: internal_tx.data,
       columns: [
               { data: 'timestamp' },
-              { data: 'tx_type' },
-              { data: 'value', "render": $.fn.dataTable.render.number( ',', '.', 5)},
-              { data: 'memo' }
+              { data: 'contract' },
+              { data: 'account' },
+              { data: 'amount' }
          ],
        "columnDefs": [{
        "targets": 1,
@@ -945,33 +1048,104 @@ function all_tx_table(all){
 
   $.fn.dataTable.moment('l LT');
 
-  var payments_table = $('#all-table').DataTable({
+//  '<a style="color:#00cc88">Receive</a>'
+//  '<a style="color:#e8007f">Send</a>'
+  console.log('all tx')
+  console.log(all)
+  //var balance = all.data.map(function(e) {
+  //  return e.
+  //});
+
+  //data = data.reverse()
+
+  let first = all.data.length - 1
+  var starting_balance = all.data[first].value
+  for (i=first; i>-1; i--) {
+    if (all.data[i].type == "income") {
+      starting_balance += all.data[i].value
+      all.data[i].balance =  '<a style="color:#fff">'+starting_balance.toLocaleString(undefined, {maximumFractionDigits:4})+'</a>'
+    } else if (all.data[i].type == "spend") {
+      starting_balance -= all.data[i].value
+      all.data[i].balance = '<a style="color:#fff">'+starting_balance.toLocaleString(undefined, {maximumFractionDigits:4})+'</a>'
+    }
+  }
+
+  var table = $('#all-table').DataTable({
       data: all.data,
       columns: [
               { data: 'timestamp' },
-              { data: 'tx_type' },
-              { data: 'value', "render": $.fn.dataTable.render.number( ',', '.', 5)},
-              { data: 'hash',
-              "render": function ( data, type, row, meta ) {
-                if (data.length > 10) {
-                  trunc = data.substr(0,12) + '...' + data.substr(54,12)
-                  return '<a style="color:#ffffff;" href="https://blockchain.elastos.org/tx/'+data+'" target="_blank">'+trunc+'</a>';
-                }
-              } }
+              { data: 'category' },
+              { data: 'account' },
+              { data: 'amount' },
+              { data: 'balance'},
          ],
       "order": [[ 0, 'desc' ]],
        pageLength: 20,
        lengthChange: false,
        searching: false,
        "lengthMenu": [[20, 50, 100, 500, 1000], [20, 50, 100, 500, 1000]],
-        "drawCallback": function () {
-       $('.paginate_button').addClass('white');
-       },
+       "drawCallback": function () {
+         $('tr').addClass('primary');
+        },
        scroller: true,
        scrollX: 200
   });
 
-  payments_table.columns.adjust()
+  table.columns.adjust().draw()
+
+  function format (d) {
+    return '<table class="details_table" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">Memo</td>'+
+            '<td class="details-column">'+d.memo+'</td>'+
+        '</tr>'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">From</td>'+
+            '<td class="details-column">'+d.from+'</td>'+
+        '</tr>'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">To</td>'+
+            '<td class="details-column">'+d.to+'</td>'+
+        '</tr>'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">Contract Type</td>'+
+            '<td class="details-column">'+d.tx_type+'</td>'+
+        '</tr>'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">Type</td>'+
+            '<td class="details-column">'+d.type+'</td>'+
+        '</tr>'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">Fee</td>'+
+            '<td class="details-column">'+d.fee+'</td>'+
+        '</tr>'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">Block</td>'+
+            '<td class="details-column">'+d.height+'</td>'+
+        '</tr>'+
+        '<tr class="details-row">'+
+            '<td class="details-column" style="font-weight:600">Transaction ID</td>'+
+            '<td class="details-column">'+d.hash+'</td>'+
+        '</tr>'+
+    '</table>';
+  };
+
+
+  $('#all-table tbody').on('click', 'tr.primary', function () {
+         var tr = $(this).closest('tr');
+         var row = table.row( tr );
+
+         if ( row.child.isShown() ) {
+             // This row is already open - close it
+             row.child.hide();
+             tr.removeClass('shown');
+         }
+         else {
+             // Open this row
+             row.child( format(row.data()) ).show();
+             tr.addClass('shown');
+         }
+  });
 
 };
 
