@@ -43,7 +43,7 @@ table.dataTable {
 }
 
 tr:hover td {
-  background-color: #4d4d4d;
+  background-color: #333333;
 }
 
 .table td {

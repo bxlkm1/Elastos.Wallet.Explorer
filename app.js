@@ -439,14 +439,14 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
         if (transaction.Type == "income") {
 
           var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
-          entry.account = 'from ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/address/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+          entry.account = 'from ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
 
           entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
 
         } else if (transaction.Type == "spend") {
 
           var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
-          entry.account = 'to ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Outputs[0]+'" target="_blank">'+transaction.Outputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/address/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+          entry.account = 'to ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Outputs[0]+'" target="_blank">'+transaction.Outputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
 
           entry.amount =  '<a style="color:#e8007f">' + '-' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
 
@@ -455,7 +455,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
         if (transaction.TxType == "CoinBase") {
 
           var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
-          entry.account = 'from CoinBase - ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/address/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+          entry.account = 'from CoinBase - ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
         }
 
         entry.tx_type = transaction.TxType
@@ -522,14 +522,14 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
       if (transaction.Type == "income") {
 
         var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
-        entry.account = 'from ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/address/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+        entry.account = 'from ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
 
         entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
 
       } else if (transaction.Type == "spend") {
 
         var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
-        entry.account = 'to ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Outputs[0]+'" target="_blank">'+transaction.Outputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/address/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+        entry.account = 'to ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Outputs[0]+'" target="_blank">'+transaction.Outputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
 
         entry.amount =  '<a style="color:#e8007f">' + '-' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
 
@@ -538,7 +538,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
       if (transaction.TxType == "CoinBase") {
 
         var truncate = transaction.Txid.substr(0,20) + '... ' + transaction.Txid.substr(44,20)
-        entry.account = 'from CoinBase - ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/address/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
+        entry.account = 'from CoinBase - ' + '<a class="address_links" style="color:#1898b8" href="https://blockchain.elastos.org/address/'+transaction.Inputs[0]+'" target="_blank">'+transaction.Inputs[0]+'</a>' + '<br>' + '<a class="address_links" style="color:#666666; font-size:0.8em" href="https://blockchain.elastos.org/tx/'+transaction.Txid+'" target="_blank">'+truncate+'</a>'
       }
 
       '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toFixed(6) +'</a>'
