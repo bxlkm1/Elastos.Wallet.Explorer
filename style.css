@@ -162,8 +162,9 @@ i:hover {
 }
 
 .nodes_li {
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 6.5px;
+  padding-bottom: 6.5px;
+  font-size: 0.95rem;
 }
 
 .url_link {

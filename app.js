@@ -1028,6 +1028,7 @@ new Chart(ctx, {
   },
   options: {
    responsive: true,
+   maintainAspectRatio: false,
    scales: {
      yAxes: [{
        scaleLabel: {
