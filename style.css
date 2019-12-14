@@ -94,6 +94,10 @@ td.details-column:first-child {
   padding-left: 0 !important;
 }
 
+.details-row {
+  white-space: normal !important;
+}
+
 .page-link {
    background-color: #1c1c1c !important;
    color: #fff;
