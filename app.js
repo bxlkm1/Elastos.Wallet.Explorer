@@ -120,18 +120,27 @@ function scan_vote_history(data,address,pay_object) {
   for (i=0; i < data.result[0].Vote_Body.length; i++) {
     node = data.result[0].Vote_Body[i].Producer_public_key
 
+    var urls = []
+
     var match = _.find(pay_object.result, function(votedNode){ return votedNode.Producer_public_key == node});
 
     //console.log(match)
 
     pay_addresses.result.push(match)
+    var httpString = 'http://',httpsString = 'https://';
+    if (match.Website.substr(0, httpString.length) !== httpString && match.Website.substr(0, httpsString.length) !== httpsString) {
+        match.Website = httpString + match.Website;
+    }
+
+    urls.name = data.result[0].Vote_Body[i].Nickname
+    urls.web = match.Website
 
     if (match.State == "Active") {
-      node_names.push(data.result[0].Vote_Body[i].Nickname)
+      node_names.push(urls)
     } else if (match.State == "Inactive") {
-      inactives.push(data.result[0].Vote_Body[i].Nickname)
+      inactives.push(urls)
     } else if (match.State == "Canceled" || match.State == "Returned") {
-      canceled.push(data.result[0].Vote_Body[i].Nickname)
+      canceled.push(urls)
     }
 
   }
@@ -169,28 +178,64 @@ function scan_vote_history(data,address,pay_object) {
       }
   }
 
-  ul = document.createElement('ul')
   var supernode_list = doc("nodes")
+  while (supernode_list.firstChild) {
+    supernode_list.removeChild(supernode_list.firstChild);
+  }
+  ul = document.createElement('ul')
   supernode_list.appendChild(ul)
   supernode_list.classList.add("supernode-list")
+
+  function socials_match(node) {
+      var html = ""
+      if (socials.hasOwnProperty(node)) {
+      for (x in socials[node]) {
+        html += socials[node][x] + " ";
+      }
+      return html
+      } else {
+      return ''
+      }
+  }
+
+  function logo_match(node) {
+      if (logos.hasOwnProperty(node)) {
+        return logos[node]
+      } else {
+        return '<img src="images/logos/Dummy.png" class="logo">'
+      }
+  }
 
   node_names.forEach(function (node) {
     let li = document.createElement('li');
     ul.appendChild(li);
-    li.innerHTML += node;
+    li.classList.add("nodes_li")
+    var logo = logo_match(node.name)
+    var web_link = '<a class="url_link" href='+node.web+' target="_blank">'+node.name+'</a>'
+    var web_icon = '<a class="social" href='+node.web+' target="_blank" title="Website"><i class="fab fa-chrome fa-sm"></i></a>' + " ";
+    var social_links = socials_match(node.name)
+    li.innerHTML += logo + web_link + '&nbsp&nbsp' + web_icon + social_links;
   });
 
   inactives.forEach(function (node) {
     let li = document.createElement('li');
     ul.appendChild(li);
-    li.innerHTML += node + ' -- Alert: Node currently inactive';
+    li.classList.add("nodes_li")
+    var logo = logo_match(node.name)
+    var web_link = '<a class="url_link" href='+node.web+' target="_blank">'+node.name+'</a>'
+    var web_icon = '<a class="social" href='+node.web+' target="_blank" title="Website"><i class="fab fa-chrome fa-sm"></i></a>' + " ";
+    var social_links = socials_match(node.name)
+    li.innerHTML += logo + web_link + '&nbsp&nbsp' + web_icon + social_links + ' -- Alert: Node currently inactive';
     li.style.color = "#e6b800";
   });
 
   canceled.forEach(function (node) {
     let li = document.createElement('li');
     ul.appendChild(li);
-    li.innerHTML += node + ' -- Warning: Node canceled';
+    li.classList.add("nodes_li")
+    var web_link = '<a class="url_link" href='+node.web+' target="_blank">'+node.name+'</a>'
+    var web_icon = '<a class="social" href='+node.web+' target="_blank" title="Website"><i class="fab fa-chrome fa-sm"></i></a>' + " ";
+    li.innerHTML += web_link + '&nbsp&nbsp' + web_icon + ' -- Warning: Node canceled';
     li.style.color = "#e8007f";
   });
 
@@ -616,7 +661,6 @@ function create_table(payments){
   table.columns.adjust()
 
   function format (d) {
-    // `d` is the original data object for the row
     return '<table class="details_table" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr class="details-row">'+
             '<td class="details-column" style="font-weight:600">Memo</td>'+
