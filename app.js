@@ -27,7 +27,6 @@ function format_time(object) {
       var formatted_time = moment.unix(time_of_tx).format('l LT')
       object.data[i].timestamp = formatted_time
   }
-  console.log(object)
   return object
 
 }
@@ -319,117 +318,45 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
       var match1 = _.find(pay_object.result, function(payment){ return payment.Payout_wallet[1] == send_address});
       var match2 = _.find(pay_object.result, function(payment){ return payment.Payout_wallet[2] == send_address});
 
+      entry.type = transaction.Type
+      entry.timestamp = transaction.CreateTime
+      entry.fee = transaction.Fee
+      entry.height = transaction.Height
+      entry.from = transaction.Inputs
+      entry.to = transaction.Outputs
+      entry.tx_type = transaction.TxType
+      entry.hash = transaction.Txid
+      entry.value = transaction.Value/100000000
+      entry.memo = transaction.Memo.slice(14)
+      entry.category = '<a  style="color:#00cc88">Rewards</a>'
+      entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
+
     if (match0 !== undefined) {
-
       entry.from_name = match0.Nickname
-      entry.type = transaction.Type
-      entry.timestamp = transaction.CreateTime
-      entry.fee = transaction.Fee
-      entry.height = transaction.Height
-      entry.from = transaction.Inputs
-      entry.to = transaction.Outputs
-      entry.tx_type = transaction.TxType
-      entry.hash = transaction.Txid
-      entry.value = transaction.Value/100000000
-      entry.memo = transaction.Memo.slice(14)
-      entry.category = '<a  style="color:#00cc88">Rewards</a>'
-      entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
-
-
       if (logos.hasOwnProperty(entry.from_name)) {
           entry.account = logos[entry.from_name] + entry.from_name
       } else {
           entry.account = '<img src="images/logos/Dummy.png" class="logo">' + entry.from_name
       }
-
       payments.data.push(entry)
-
     } else if (match1 !== undefined) {
-
       entry.from_name = match1.Nickname
-      entry.type = transaction.Type
-      entry.timestamp = transaction.CreateTime
-      entry.fee = transaction.Fee
-      entry.height = transaction.Height
-      entry.from = transaction.Inputs
-      entry.to = transaction.Outputs
-      entry.tx_type = transaction.TxType
-      entry.hash = transaction.Txid
-      entry.value = transaction.Value/100000000
-      entry.memo = transaction.Memo.slice(14)
-      entry.category = '<a  style="color:#00cc88">Rewards</a>'
-      entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
-
-
       if (logos.hasOwnProperty(entry.from_name)) {
           entry.account = logos[entry.from_name] + entry.from_name
       } else {
           entry.account = '<img src="images/logos/Dummy.png" class="logo">' + entry.from_name
       }
-
       payments.data.push(entry)
-
     } else if (match2 !== undefined) {
-
       entry.from_name = match2.Nickname
-      entry.type = transaction.Type
-      entry.timestamp = transaction.CreateTime
-      entry.fee = transaction.Fee
-      entry.height = transaction.Height
-      entry.from = transaction.Inputs
-      entry.to = transaction.Outputs
-      entry.tx_type = transaction.TxType
-      entry.hash = transaction.Txid
-      entry.value = transaction.Value/100000000
-      entry.memo = transaction.Memo.slice(14)
-      entry.category = '<a  style="color:#00cc88">Rewards</a>'
-      entry.amount =  '<a style="color:#00cc88">' + '+' + (transaction.Value/100000000).toLocaleString(undefined, {maximumFractionDigits:6}) + ' ELA' + '</a>'
-
-
-
       if (logos.hasOwnProperty(entry.from_name)) {
           entry.account = logos[entry.from_name] + entry.from_name
       } else {
           entry.account = '<img src="images/logos/Dummy.png" class="logo">' + entry.from_name
       }
-
       payments.data.push(entry)
-
-    } else { // transfers transaction table
-
-    //  console.log(transaction)
-
-    /*  if (transaction.TxType == "TransferAsset") {
-        entry.type = transaction.Type
-      } else if (transaction.TxType == "Vote") {
-          if (transaction.Inputs = transaction.Outputs) {
-              entry.type = transaction.TxType
-          } else {
-            if (transaction.Type == "spend") {
-              entry.type = transaction.Type
-            }
-            if (transaction.Type == "income") {
-              entry.type = transaction.Type
-            }
-          }
-      } else {
-        entry.type = transaction.TxType
-      }*/
-
-
-      /*if (transaction.Type === "spend" && transaction.TxType === "vote") {
-        entry.type = 'Vote' // Consolidate?
-        //console.log('multiinput')
-        //console.log(transaction)
-      } else if (transaction.Inputs.length == transaction.Outputs.length && transaction.Type === "spend" && transaction.TxType === "vote") {
-        //console.log('vote')
-        entry.type = 'Vote'
-        //console.log(transaction)
-      } else {
-        //console.log('else')
-        //console.log(transaction)
-        entry.type = transaction.Type
-      }*/
+      
+    } else { // Transfers transaction table
 
       if (transaction.Inputs.length == transaction.Outputs.length && JSON.stringify(transaction.Inputs) === JSON.stringify(transaction.Outputs) || transaction.Inputs[0] === transaction.Outputs[0] || transaction.Outputs.includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
 
@@ -473,22 +400,7 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
         internal_tx.data.push(entry)
 
 
-      } /*else if (transaction.Inputs[0] === transaction.Outputs[0] || transaction.Outputs.includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
-
-        entry.tx_type = transaction.TxType
-        entry.type = transaction.Type
-        entry.timestamp = transaction.CreateTime
-        entry.fee = transaction.Fee
-        entry.height = transaction.Height
-        entry.from = transaction.Inputs
-        entry.to = transaction.Outputs
-        entry.hash = transaction.Txid
-        entry.value = transaction.Value/100000000
-        entry.memo = transaction.Memo.slice(14)
-
-        internal_tx.data.push(entry)
-
-      } */else {
+      } else {
 
         if (transaction.Type == "income") {
 
@@ -601,22 +513,6 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
 
       internal_tx.data.push(entry)
 
-    /*if (transaction.Inputs.length == transaction.Outputs.length && JSON.stringify(transaction.Inputs) === JSON.stringify(transaction.Outputs) || transaction.Inputs[0] === transaction.Outputs[0] && (JSON.stringify(transaction.Outputs)).includes("EZxunTpDtdy89rAWEMzvhUxRbhX1WNtz9T")) {
-
-      entry.tx_type = transaction.TxType
-      entry.type = transaction.Type
-      entry.timestamp = transaction.CreateTime
-      entry.fee = transaction.Fee
-      entry.height = transaction.Height
-      entry.from = transaction.Inputs
-      entry.to = transaction.Outputs
-      entry.hash = transaction.Txid
-      entry.value = transaction.Value/100000000
-      entry.memo = transaction.Memo.slice(14)
-
-      internal_tx.data.push(entry)*/
-
-
     } else {
 
       if (transaction.Type == "income") {
@@ -665,7 +561,6 @@ function scan_address_history(data,address,address_balance,pay_object,value,bloc
     all_tx.data.push(entry)
  }
   populate_wallet_summary(data,address,address_balance,income_count,spend_count);
-  //create_transfers_table(transfers,layout)
 }
 
   create_transfers_table(transfers,layout)
@@ -744,7 +639,7 @@ function parse_payments(data,value,block_time) {
   Years_elapsed_all_time = parseFloat(Timestamp_all/31536000)
   Years_elapsed_recent_vote = parseFloat((Time_Now - Timestamp_recent_vote)/31536000)
 
-  // Balance minus all time?
+
   all_timeARR = parseFloat((all_time/Years_elapsed_all_time)/(balance)*100)
   //doc("allARR").innerHTML = all_timeARR.toFixed(2) + '% ARR'
 
@@ -836,12 +731,10 @@ function create_table(payments){
          var row = table.row( tr );
 
          if ( row.child.isShown() ) {
-             // This row is already open - close it
              row.child.hide();
              tr.removeClass('shown');
          }
          else {
-             // Open this row
              row.child( format(row.data()) ).show();
              tr.addClass('shown');
          }
@@ -1048,15 +941,9 @@ function all_tx_table(all){
 
   $.fn.dataTable.moment('l LT');
 
-//  '<a style="color:#00cc88">Receive</a>'
-//  '<a style="color:#e8007f">Send</a>'
   console.log('all tx')
   console.log(all)
-  //var balance = all.data.map(function(e) {
-  //  return e.
-  //});
 
-  //data = data.reverse()
 
   let first = all.data.length - 1
   var starting_balance = all.data[first].value
