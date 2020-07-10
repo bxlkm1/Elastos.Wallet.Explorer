@@ -3,7 +3,8 @@ var logos = {
   "Antpool-ELA": '<img src="images/logos/Antpool.png" class="logo">',
   AnyPeer: '<img src="images/logos/AnyPeer3.png" class="logo">',
   "BIT.GAME": '<img src="images/logos/BIT.GAME.png" class="logo">',
-  "BitWork (CR Region HK)": '<img src="images/logos/BitWork.png" class="logo">',
+  "BitWork (CR Region HK)":
+    '<img src="images/logos/BitWork (CR Region HK).png" class="logo">',
   "Black Swan": '<img src="images/logos/Black-Swan1.png" class="logo">',
   "BTC.com": '<img src="images/logos/BTC1.png" class="logo">',
   "Cheery Community":
@@ -57,6 +58,8 @@ var logos = {
     '<img src="images/logos/Noderators.png" class="logo">',
   "Northern Lights":
     '<img src="images/logos/Northern Lights.png" class="logo">',
+  "Orchard - Elastos Business Development":
+    '<img src="images/logos/Orchard - Elastos Business Development.png" class="logo">',
   "Quantum Wealth Supernode":
     '<img src="images/logos/Quantum Wealth Supernode.png" class="logo">',
   "RUOLAN(若兰)": '<img src="images/logos/Roulon1.png" class="logo">',
