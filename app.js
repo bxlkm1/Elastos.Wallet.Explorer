@@ -1605,10 +1605,6 @@ function create_balance_chart(all_tx, layout) {
           {
             type: "time",
             distribution: "linear",
-            ticks: {
-              beginAtZero: true,
-              maxTicksLimit: 20,
-            },
           },
         ],
       },
