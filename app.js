@@ -51,7 +51,7 @@ function get_address() {
 
   $.when(
     $.get(
-      "https://cors-anywhere.herokuapp.com/https://node1.elaphant.app/api/1/dpos/address/" +
+      "https://node1.elaphant.app/api/1/dpos/address/" +
         address +
         "?pageSize=1&pageNum=1",
       function (data) {
@@ -61,8 +61,7 @@ function get_address() {
       }
     ),
     $.get({
-      url:
-        "https://cors-anywhere.herokuapp.com/https://elanodes.com/api/payout-addresses",
+      url: "https://elanodes.com/api/payout-addresses",
       cache: false,
       success: function (pay_object) {
         console.log("Pay object successfully retrieved");
@@ -73,23 +72,19 @@ function get_address() {
       doc("loading_message").innerHTML = "Analyzing transactions...";
 
       $.when(
-        $.get(
-          "https://cors-anywhere.herokuapp.com/https://node1.elaphant.app/api/1/history/" +
-            address,
-          function (data) {
-            console.log("Raw address history data");
-            console.log(data);
-          }
-        ),
+        $.get("https://node1.elaphant.app/api/1/history/" + address, function (
+          data
+        ) {
+          console.log("Raw address history data");
+          console.log(data);
+        }),
 
-        $.get(
-          "https://cors-anywhere.herokuapp.com/https://node1.elaphant.app/api/v1/balance/" +
-            address,
-          function (address_balance) {
-            console.log("Address balance");
-            console.log(address_balance);
-          }
-        )
+        $.get("https://node1.elaphant.app/api/v1/balance/" + address, function (
+          address_balance
+        ) {
+          console.log("Address balance");
+          console.log(address_balance);
+        })
       ).then(function (data, address_balance) {
         if (data[0].result === "invalid address") {
           $("#loader").hide();
@@ -307,26 +302,22 @@ function scan_vote_history(data, address, pay_object) {
   }
 
   $.when(
-    $.get(
-      "https://cors-anywhere.herokuapp.com/https://node1.elaphant.app/api/3/history/" +
-        address,
-      function (data) {
-        console.log("Raw address history data");
-        //data = JSON.parse(data) // Uncomment if using local node
-        console.log(data);
+    $.get("https://node1.elaphant.app/api/3/history/" + address, function (
+      data
+    ) {
+      console.log("Raw address history data");
+      //data = JSON.parse(data) // Uncomment if using local node
+      console.log(data);
 
-        //scan_address_history(data,address,pay_object,pay_object,value,block_time)
-      }
-    ),
+      //scan_address_history(data,address,pay_object,pay_object,value,block_time)
+    }),
 
-    $.get(
-      "https://cors-anywhere.herokuapp.com/https://node1.elaphant.app/api/v1/balance/" +
-        address,
-      function (address_balance) {
-        console.log("Address balance");
-        console.log(address_balance);
-      }
-    )
+    $.get("https://node1.elaphant.app/api/v1/balance/" + address, function (
+      address_balance
+    ) {
+      console.log("Address balance");
+      console.log(address_balance);
+    })
   ).then(function (data, address_balance) {
     doc("loading_message").innerHTML = "Analyzing transactions...";
     scan_address_history(
